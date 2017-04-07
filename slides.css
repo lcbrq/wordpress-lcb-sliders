@@ -1,0 +1,12 @@
+.flexslider li {
+    position: relative;
+}
+
+.flexslider .child {
+    position: absolute;
+    display: block;
+    width: 600px;
+    height: 200px;
+    /*top: 70px;*/
+    left: 20px;
+}

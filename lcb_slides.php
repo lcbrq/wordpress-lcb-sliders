@@ -3,15 +3,17 @@
 /*
 * Plugin Name: LCB Slides
 * Description: Simple slides management for wordpress
-* Version: 1.0.0
+* Version: 1.1.0
 * Author: Tomasz Gregorczyk
 * License: GPL2
 */ 
 
 include(dirname(__FILE__) . '/core/admin.php');
+include(dirname(__FILE__) . '/core/widget.php');
 
 new LCB_Slides('flexslider');
 new LCB_Slides_Admin;
+new LCB_Slides_Widget;
 
 class LCB_Slides {
 
@@ -30,7 +32,7 @@ class LCB_Slides {
     public function lcb_slides_flexslider() {
         $path = get_stylesheet_directory_uri() . '/includes/lcb_slides/extra/';
         wp_enqueue_style('flexslider', $path . 'flexslider.css');
-        wp_enqueue_script('flexslider', $path . 'flexslider.js', array(), '1.0.0', true);
+        wp_enqueue_script('flexslider', plugins_url('extra/flexslider.js', __FILE__), array(), '1.0.0', true);
     }
 
     function getSlides() {

@@ -46,6 +46,7 @@ class LCB_Slides {
     function getSlide($slide) {
         $slide->url = wp_get_attachment_url(get_post_thumbnail_id($slide->ID));
         $slide->link = get_post_meta($slide->ID, '_slide_url', true);
+        $slide->button = get_post_meta($slide->ID, '_slide_button', true);
         return $slide;
     }
 

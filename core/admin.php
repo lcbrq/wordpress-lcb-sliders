@@ -4,7 +4,7 @@ class LCB_Slides_Admin {
 
     public function __construct() {
         add_action('init', array($this, 'lcb_slides_register'));
-        add_action('add_meta_boxes', array($this, 'lcb_slides_url'));
+        add_action('add_meta_boxes', array($this, 'lcb_slides_add_meta_boxes'));
         add_action('save_post', array($this, 'lcb_slides_save_meta_box_data'));
     }
 
@@ -41,23 +41,19 @@ class LCB_Slides_Admin {
             'can_export' => false,
             'has_archive' => false,
             'exclude_from_search' => true,
-            'publicly_queryable' => true,
+            'publicly_queryable' => false,
             'rewrite' => false,
             'capability_type' => 'page',
         );
         register_post_type('slide', $args);
     }
 
-    /* custom links */
-
     /**
      * Adds a box to the main column on the Post and Page edit screens.
      */
-    function lcb_slides_url() {
-
-
+    function lcb_slides_add_meta_boxes() {
         add_meta_box(
-                'lcb_slides_sectionid', __('Slide options', 'lcb_slides_textdomain'), array($this,'lcb_slides_meta_box_callback'), 'slide'
+            'lcb_slides_slider', __('Slide options', 'lcb_slides_textdomain'), array($this,'lcb_slides_meta_box_callback'), 'slide'
         );
     }
 
@@ -77,10 +73,24 @@ class LCB_Slides_Admin {
          */
         $value = get_post_meta($post->ID, '_slide_url', true);
 
-        echo '<label for="lcb_slides_url_field">';
+        echo '<input type="text" id="lcb_slides_url_field" name="lcb_slides_url_field" value="' . esc_attr($value) . '" size="25" />';
+        echo '<label for="lcb_slides_url_field"> ';
         _e('Slide url', 'lcb_slides_textdomain');
         echo '</label> ';
-        echo '<input type="text" id="lcb_slides_url_field" name="lcb_slides_url_field" value="' . esc_attr($value) . '" size="25" />';
+
+        // Add an nonce field so we can check for it later.
+        wp_nonce_field('lcb_slides_meta_box', 'lcb_slides_meta_box_nonce');
+
+        /*
+         * Use get_post_meta() to retrieve an existing value
+         * from the database and use the value for the form.
+         */
+        $value = get_post_meta($post->ID, '_slide_button', true);
+        echo '<br/>';
+        echo '<input type="text" id="lcb_slides_button_field" name="lcb_slides_button_field" value="' . esc_attr($value) . '" size="25" />';
+        echo '<label for="lcb_slides_button_field"> ';
+        _e('Button text', 'lcb_slides_textdomain');
+        echo '</label> ';
     }
 
     /**
@@ -131,10 +141,17 @@ class LCB_Slides_Admin {
         }
 
         // Sanitize user input.
-        $my_data = sanitize_text_field($_POST['lcb_slides_url_field']);
+        $url = sanitize_text_field($_POST['lcb_slides_url_field']);
 
         // Update the meta field in the database.
-        update_post_meta($post_id, '_slide_url', $my_data);
+        update_post_meta($post_id, '_slide_url', $url);
+
+	// Sanitize user input.
+        $button = sanitize_text_field($_POST['lcb_slides_button_field']);
+
+        // Update the meta field in the database.
+        update_post_meta($post_id, '_slide_button', $button);
+
     }
 
 }

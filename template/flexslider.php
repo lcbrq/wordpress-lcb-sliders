@@ -1,5 +1,5 @@
 <?php
-$slider = new LCB_Slides;
+$slider = new LCB_Slides('flexslider');
 $slides = $slider->getSlides();
 
 if (count($slides)):

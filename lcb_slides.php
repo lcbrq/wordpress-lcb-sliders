@@ -11,7 +11,6 @@
 include(dirname(__FILE__) . '/core/admin.php');
 include(dirname(__FILE__) . '/core/widget.php');
 
-new LCB_Slides('flexslider');
 new LCB_Slides_Admin;
 new LCB_Slides_Widget;
 
